@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Blood Alliance</title>
-  <meta name="description" content="Join the Blood alliance — link accounts, search players, and explore clans." />
+  <meta name="description" content="Join the Blood Alliance — link accounts, search players, and explore clans." />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
   body {
@@ -92,7 +92,7 @@
     background: rgba(0,0,0,0.6);
     text-shadow: 0 0 10px cyan;
   }
-</style>
+  </style>
 </head>
 <body>
   <header>
@@ -144,26 +144,55 @@
   </main>
 
   <footer>
-    © 2018 Blood Alliance - Clash of Clans
+    © 2025 Blood Alliance - Clash of Clans
   </footer>
 
   <script>
+    const PROXY_URL = "https://coc-proxy-server.onrender.com"; // 🔴 Replace with your Render URL
+
     document.getElementById('linkForm').addEventListener('submit', e => {
       e.preventDefault();
       const tag = e.target.playerTag.value.trim();
       document.getElementById('linkResult').innerHTML = `<p>Linked account for tag: <strong>${tag}</strong></p>`;
     });
 
-    document.getElementById('playerSearchForm').addEventListener('submit', e => {
+    document.getElementById('playerSearchForm').addEventListener('submit', async e => {
       e.preventDefault();
-      const tag = document.getElementById('playerTag').value.trim();
-      document.getElementById('playerInfo').innerHTML = `<p>Searching player data for <strong>${tag}</strong>... (Demo)</p>`;
+      const tag = document.getElementById('playerTag').value.trim().replace('#', '');
+      const info = document.getElementById('playerInfo');
+      info.innerHTML = `<p>🔎 Fetching player data for <strong>${tag}</strong>...</p>`;
+      try {
+        const res = await fetch(`${PROXY_URL}/player/${tag}`);
+        const data = await res.json();
+        if (data.reason) throw new Error(data.reason);
+        info.innerHTML = `
+          <h3>${data.name} (Level ${data.expLevel})</h3>
+          <p>Trophies: ${data.trophies} 🏆</p>
+          <p>Clan: ${data.clan ? data.clan.name : 'No clan'}</p>
+        `;
+      } catch (err) {
+        info.innerHTML = `<p style="color:yellow;">⚠️ Error: ${err.message}</p>`;
+      }
     });
 
-    document.getElementById('clanSearchForm').addEventListener('submit', e => {
+    document.getElementById('clanSearchForm').addEventListener('submit', async e => {
       e.preventDefault();
-      const tag = document.getElementById('clanTag').value.trim();
-      document.getElementById('clanInfo').innerHTML = `<p>Searching clan info for <strong>${tag}</strong>... (Demo)</p>`;
+      const tag = document.getElementById('clanTag').value.trim().replace('#', '');
+      const info = document.getElementById('clanInfo');
+      info.innerHTML = `<p>🔎 Fetching clan info for <strong>${tag}</strong>...</p>`;
+      try {
+        const res = await fetch(`${PROXY_URL}/clan/${tag}`);
+        const data = await res.json();
+        if (data.reason) throw new Error(data.reason);
+        info.innerHTML = `
+          <h3>${data.name} (${data.tag})</h3>
+          <p>Members: ${data.members}</p>
+          <p>Clan Level: ${data.clanLevel}</p>
+          <p>Points: ${data.clanPoints}</p>
+        `;
+      } catch (err) {
+        info.innerHTML = `<p style="color:yellow;">⚠️ Error: ${err.message}</p>`;
+      }
     });
   </script>
 </body>
