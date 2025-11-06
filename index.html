@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clash of Clans Alliance</title>
+  <meta name="description" content="Join the ultimate Clash of Clans alliance — link accounts, search players, and explore clans." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, cyan, red);
+      color: #fff;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+    header {
+      background: rgba(0,0,0,0.6);
+      padding: 10px 0;
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      list-style: none;
+      padding: 0;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    section {
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .btn {
+      display: inline-block;
+      background: #fff;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+    .btn:hover {
+      background: #ffeb3b;
+    }
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      padding: 15px;
+      background: rgba(0,0,0,0.6);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Clash of Clans Alliance
+    <nav>
+      <ul>
+        <li><a href="#account">Account Link</a></li>
+        <li><a href="#player-search">Search Player</a></li>
+        <li><a href="#clan-search">Search Clan</a></li>
+        <li><a href="#overview">Clans Overview</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="account">
+      <h2>Account Linking</h2>
+      <p>Link your Clash of Clans account below:</p>
+      <form id="linkForm">
+        <input type="text" name="playerTag" placeholder="#ABC123" required>
+        <button class="btn" type="submit">Link Account</button>
+      </form>
+      <div id="linkResult"></div>
+    </section>
+
+    <section id="player-search">
+      <h2>Search Player by Tag</h2>
+      <form id="playerSearchForm">
+        <input type="text" id="playerTag" placeholder="#PLAYER123" required>
+        <button class="btn" type="submit">Search</button>
+      </form>
+      <div id="playerInfo"></div>
+    </section>
+
+    <section id="clan-search">
+      <h2>Search Clan by Tag</h2>
+      <form id="clanSearchForm">
+        <input type="text" id="clanTag" placeholder="#CLAN123" required>
+        <button class="btn" type="submit">Search Clan</button>
+      </form>
+      <div id="clanInfo"></div>
+    </section>
+
+    <section id="overview">
+      <h2>Clans Overview</h2>
+      <p>Check out all alliance clans and stats here:</p>
+      <div id="clansOverview"></div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 Clash of Clans Alliance — Powered by CoC API
+  </footer>
+
+  <script>
+    document.getElementById('linkForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const tag = e.target.playerTag.value.trim();
+      document.getElementById('linkResult').innerHTML = `<p>Linked account for tag: <strong>${tag}</strong></p>`;
+    });
+
+    document.getElementById('playerSearchForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const tag = document.getElementById('playerTag').value.trim();
+      document.getElementById('playerInfo').innerHTML = `<p>Searching player data for <strong>${tag}</strong>... (Demo)</p>`;
+    });
+
+    document.getElementById('clanSearchForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const tag = document.getElementById('clanTag').value.trim();
+      document.getElementById('clanInfo').innerHTML = `<p>Searching clan info for <strong>${tag}</strong>... (Demo)</p>`;
+    });
+  </script>
+</body>
+</html>
