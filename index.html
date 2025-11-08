@@ -1,199 +1,260 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Blood Alliance</title>
-  <meta name="description" content="Join the Blood Alliance — link accounts, search players, and explore clans." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clash With Blood Alliance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Inline&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-  body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(270deg, cyan, red);
-    background-size: 400% 400%;
-    animation: gradientShift 8s ease infinite;
-    color: #fff;
-  }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      color: #fff;
+    }
 
-  .container {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
-  }
+    /* ===== Video Background ===== */
+    .background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(60%);
+    }
 
-  header {
-    background: rgba(0,0,0,0.6);
-    padding: 10px 0;
-    text-align: center;
-    font-size: 1.5em;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-shadow: 0 0 10px #ff0000, 0 0 20px cyan;
-  }
+    /* ===== Navbar ===== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 50px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      z-index: 10;
+    }
 
-  nav ul {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    list-style: none;
-    padding: 0;
-  }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: #fff;
+      text-shadow: 0 0 10px cyan;
+    }
 
-  nav a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 25px;
+    }
 
-  nav a:hover {
-    text-shadow: 0 0 10px cyan, 0 0 20px red;
-  }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
 
-  section {
-    background: rgba(0,0,0,0.4);
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 20px;
-    box-shadow: 0 0 20px rgba(255,255,255,0.1);
-  }
+    nav a:hover {
+      color: cyan;
+      text-shadow: 0 0 10px red, 0 0 20px cyan;
+    }
 
-  .btn {
-    display: inline-block;
-    background: linear-gradient(90deg, cyan, red);
-    color: #fff;
-    padding: 10px 25px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    border: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    box-shadow: 0 0 10px cyan;
-  }
+    .discord-btn {
+      background: linear-gradient(90deg, red, cyan);
+      padding: 8px 18px;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 0 15px cyan;
+      transition: 0.3s ease;
+    }
 
-  .btn:hover {
-    background: linear-gradient(90deg, red, cyan);
-    box-shadow: 0 0 20px red, 0 0 30px cyan;
-    transform: scale(1.05);
-  }
+    .discord-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px red, 0 0 35px cyan;
+    }
 
-  footer {
-    text-align: center;
-    margin-top: 30px;
-    padding: 15px;
-    background: rgba(0,0,0,0.6);
-    text-shadow: 0 0 10px cyan;
-  }
+    /* ===== Hero Section ===== */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .hero h1 {
+      font-family: 'Bungee Inline', cursive;
+      font-size: 3.5rem;
+      text-shadow: 0 0 20px red, 0 0 40px cyan;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      max-width: 700px;
+      font-size: 1.2rem;
+      line-height: 1.5;
+      text-shadow: 0 0 10px black;
+    }
+
+    .hero button {
+      margin-top: 25px;
+      background: linear-gradient(90deg, cyan, red);
+      border: none;
+      border-radius: 12px;
+      padding: 14px 40px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 20px cyan;
+      transition: all 0.3s ease;
+    }
+
+    .hero button:hover {
+      background: linear-gradient(90deg, red, cyan);
+      box-shadow: 0 0 30px red, 0 0 40px cyan;
+      transform: scale(1.05);
+    }
+
+    /* ===== Rules Section ===== */
+    .rules {
+      padding: 80px 20px;
+      background: rgba(0, 0, 0, 0.7);
+      text-align: center;
+    }
+
+    .rules h2 {
+      font-family: 'Bungee Inline', cursive;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      text-shadow: 0 0 15px red, 0 0 25px cyan;
+    }
+
+    .rules-container {
+      max-width: 900px;
+      margin: auto;
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+
+    .rule-section {
+      margin-bottom: 40px;
+      text-align: left;
+    }
+
+    .rule-section h3 {
+      font-size: 1.6rem;
+      text-shadow: 0 0 10px cyan;
+      margin-bottom: 10px;
+    }
+
+    .rule-section ul {
+      list-style: none;
+      padding-left: 15px;
+    }
+
+    .rule-section li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: rgba(0,0,0,0.7);
+      position: relative;
+      bottom: 0;
+      color: #ccc;
+    }
   </style>
 </head>
 <body>
+
+  <!-- ===== Background Video ===== -->
+  <video autoplay muted loop playsinline class="background-video" id="bg-video">
+    <!-- Replace link below with your video -->
+    <source src="YOUR_VIDEO_LINK_HERE.mp4" type="video/mp4" />
+  </video>
+
+  <!-- ===== Navbar ===== -->
   <header>
-    Blood Alliance
+    <div class="logo">🩸 Blood Alliance</div>
     <nav>
       <ul>
-        <li><a href="#account">Link Account</a></li>
-        <li><a href="#player-search">Search Player</a></li>
-        <li><a href="#clan-search">Search Clan</a></li>
-        <li><a href="#overview">Blood Clans Overview</a></li>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#clans">Clans</a></li>
+        <li><a href="#cwl-rules">CWL Rules</a></li>
+        <li><a href="#rules">Rules</a></li>
       </ul>
     </nav>
+    <a href="https://discord.gg/gGGEs5SV9z" class="discord-btn" target="_blank">Discord</a>
   </header>
 
-  <main class="container">
-    <section id="account">
-      <h2>Account Linking</h2>
-      <p>Link your Clash of Clans account below:</p>
-      <form id="linkForm">
-        <input type="text" name="playerTag" placeholder="#ABC123" required>
-        <button class="btn" type="submit">Link Account</button>
-      </form>
-      <div id="linkResult"></div>
-    </section>
+  <!-- ===== Hero Section ===== -->
+  <section class="hero" id="home">
+    <h1>Clash With Blood Alliance</h1>
+    <p>Masters of War-Farming, CWL dominance, and unity in battle.  
+       Join one of our elite clans and fight for glory today!</p>
+    <button onclick="window.location.href='#clans'">🔥 See Our Clans</button>
+  </section>
 
-    <section id="player-search">
-      <h2>Search Player by Tag</h2>
-      <form id="playerSearchForm">
-        <input type="text" id="playerTag" placeholder="#PLAYER123" required>
-        <button class="btn" type="submit">Search</button>
-      </form>
-      <div id="playerInfo"></div>
-    </section>
+  <!-- ===== Rules Section ===== -->
+  <section class="rules" id="rules">
+    <h2>Alliance & Discord Rules</h2>
+    <div class="rules-container">
+      <div class="rule-section">
+        <h3>⚔️ Clan Rules</h3>
+        <ul>
+          <li>1️⃣ Be active daily and participate in wars and CWL.</li>
+          <li>2️⃣ Always use both war attacks — missing attacks may lead to demotion.</li>
+          <li>3️⃣ Donate correct troops only as requested.</li>
+          <li>4️⃣ Respect all members — teamwork builds victory.</li>
+          <li>5️⃣ No rushed bases allowed in main clan — use feeder clans if needed.</li>
+          <li>6️⃣ Maintain a healthy competitive spirit, no toxicity.</li>
+        </ul>
+      </div>
 
-    <section id="clan-search">
-      <h2>Search Clan by Tag</h2>
-      <form id="clanSearchForm">
-        <input type="text" id="clanTag" placeholder="#CLAN123" required>
-        <button class="btn" type="submit">Search Clan</button>
-      </form>
-      <div id="clanInfo"></div>
-    </section>
-
-    <section id="overview">
-      <h2>Clans Overview</h2>
-      <p>Check out all alliance clans and stats here:</p>
-      <div id="clansOverview"></div>
-    </section>
-  </main>
+      <div class="rule-section">
+        <h3>💬 Discord Server Rules</h3>
+        <ul>
+          <li>1️⃣ Respect everyone — no harassment, hate speech, or spam.</li>
+          <li>2️⃣ Keep conversations in their appropriate channels.</li>
+          <li>3️⃣ No self-promotion or external links without admin approval.</li>
+          <li>4️⃣ Use proper language — this is a family-friendly server.</li>
+          <li>5️⃣ Follow all Discord Terms of Service.</li>
+          <li>6️⃣ Breaking these rules may lead to kick or permanent ban.</li>
+        </ul>
+      </div>
+      <div style="text-align:center;margin-top:20px;">
+        <a href="https://discord.gg/gGGEs5SV9z" target="_blank" class="discord-btn">Join Our Discord</a>
+      </div>
+    </div>
+  </section>
 
   <footer>
-    © 2025 Blood Alliance - Clash of Clans
+    © 2025 Blood Alliance — Clash of Clans Family
   </footer>
 
-  <script>
-    const PROXY_URL = "https://coc-proxy-server.onrender.com"; // 🔴 Replace with your Render URL
-
-    document.getElementById('linkForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const tag = e.target.playerTag.value.trim();
-      document.getElementById('linkResult').innerHTML = `<p>Linked account for tag: <strong>${tag}</strong></p>`;
-    });
-
-    document.getElementById('playerSearchForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const tag = document.getElementById('playerTag').value.trim().replace('#', '');
-      const info = document.getElementById('playerInfo');
-      info.innerHTML = `<p>🔎 Fetching player data for <strong>${tag}</strong>...</p>`;
-      try {
-        const res = await fetch(`${PROXY_URL}/player/${tag}`);
-        const data = await res.json();
-        if (data.reason) throw new Error(data.reason);
-        info.innerHTML = `
-          <h3>${data.name} (Level ${data.expLevel})</h3>
-          <p>Trophies: ${data.trophies} 🏆</p>
-          <p>Clan: ${data.clan ? data.clan.name : 'No clan'}</p>
-        `;
-      } catch (err) {
-        info.innerHTML = `<p style="color:yellow;">⚠️ Error: ${err.message}</p>`;
-      }
-    });
-
-    document.getElementById('clanSearchForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const tag = document.getElementById('clanTag').value.trim().replace('#', '');
-      const info = document.getElementById('clanInfo');
-      info.innerHTML = `<p>🔎 Fetching clan info for <strong>${tag}</strong>...</p>`;
-      try {
-        const res = await fetch(`${PROXY_URL}/clan/${tag}`);
-        const data = await res.json();
-        if (data.reason) throw new Error(data.reason);
-        info.innerHTML = `
-          <h3>${data.name} (${data.tag})</h3>
-          <p>Members: ${data.members}</p>
-          <p>Clan Level: ${data.clanLevel}</p>
-          <p>Points: ${data.clanPoints}</p>
-        `;
-      } catch (err) {
-        info.innerHTML = `<p style="color:yellow;">⚠️ Error: ${err.message}</p>`;
-      }
-    });
-  </script>
 </body>
 </html>
