@@ -363,13 +363,16 @@
             <p><strong>Members:</strong> ${clan.members}</p>
             <p><strong>Leader:</strong> ${clan.leader}</p>
             <p><strong>Co-Leaders:</strong> ${clan.coLeaders.join(', ')}</p>
+            <a class="open-btn" target="_blank"
+              href="https://link.clashofclans.com/en/?action=OpenClanProfile&tag=${encodeURIComponent(clan.tag)}">
+              ⚔️ Open in Game
+            </a>
           </div>
         `).join('');
       } catch (error) {
         container.innerHTML = '⚠️ Failed to load clan data.';
       }
     }
-
     loadClans();
   </script>
 </body>
