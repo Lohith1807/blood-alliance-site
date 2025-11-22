@@ -11,7 +11,6 @@
   <style>
     :root {
       --bg: #050816;
-      --bg2: #050816;
       --card: #0b1020;
       --border: #22263a;
       --primary: #f97316;
@@ -19,7 +18,7 @@
       --text: #e5e7eb;
       --muted: #9ca3af;
       --danger: #ef4444;
-      --radius: 14px;
+      --radius: 18px;
     }
 
     * {
@@ -114,8 +113,8 @@
     }
 
     .controls-group {
-      flex: 1 1 180px;
-      min-width: 170px;
+      flex: 1 1 220px;
+      min-width: 200px;
     }
 
     .label {
@@ -238,6 +237,7 @@
       margin-bottom: 0.9rem;
       font-size: 0.8rem;
       color: var(--muted);
+      flex-wrap: wrap;
     }
 
     .list-meta strong {
@@ -250,19 +250,13 @@
       gap: 0.85rem;
     }
 
-    @media (min-width: 768px) {
-      .cards-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
     .card {
       border-radius: var(--radius);
       border: 1px solid var(--border);
       background: radial-gradient(circle at top left, rgba(249,115,22,0.16), transparent 55%),
                   radial-gradient(circle at bottom, rgba(34,197,94,0.06), transparent 55%),
                   rgba(15,23,42,0.95);
-      padding: 0.9rem 1rem;
+      padding: 1.1rem 1.1rem 0.85rem;
       box-shadow: 0 18px 40px rgba(15,23,42,0.75);
       transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s, background 0.2s;
     }
@@ -273,35 +267,30 @@
       box-shadow: 0 26px 60px rgba(15,23,42,0.9);
     }
 
-    .card-grid {
+    .card-main {
       display: grid;
-      grid-template-columns: 1.4fr 1.2fr 1fr 0.8fr;
-      gap: 0.75rem;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.1fr);
+      gap: 1.25rem;
       align-items: center;
     }
 
-    @media (max-width: 900px) {
-      .card-grid {
-        grid-template-columns: 1.4fr 1.4fr;
-      }
-    }
-
-    @media (max-width: 650px) {
-      .card-grid {
+    @media (max-width: 768px) {
+      .card-main {
         grid-template-columns: 1fr;
+        gap: 0.9rem;
       }
     }
 
-    .card-label {
+    .section-label {
       font-size: 0.72rem;
       color: var(--muted);
-      margin-bottom: 0.15rem;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.2rem;
     }
 
     .player-name {
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 700;
     }
 
@@ -318,52 +307,53 @@
       margin-left: 0.35rem;
     }
 
-    .pill-th {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      border: 1px solid rgba(248, 250, 252, 0.4);
-      background: rgba(15,23,42,0.98);
-    }
-
-    .pill-th span {
-      font-size: 0.78rem;
-    }
-
-    .weight {
+    .registered {
+      margin-top: 0.35rem;
       font-size: 0.8rem;
       color: var(--muted);
-      margin-top: 0.1rem;
     }
 
     .username {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 500;
+      margin-top: 0.6rem;
     }
 
     .user-id {
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--muted);
-      margin-top: 0.15rem;
+      margin-top: 0.2rem;
       word-break: break-all;
+    }
+
+    .clan-name {
+      font-size: 0.98rem;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .clan-tag {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 0.15rem;
     }
 
     .links {
       display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.35rem;
+      justify-content: flex-end;
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+      flex-wrap: wrap;
     }
 
     .link-btn {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.35rem;
       font-size: 0.78rem;
-      padding: 0.3rem 0.65rem;
+      padding: 0.3rem 0.75rem;
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.75);
       background: rgba(15,23,42,0.9);
@@ -389,6 +379,22 @@
 
     .link-btn.main:hover {
       background: linear-gradient(90deg, #fb923c, #f472b6);
+    }
+
+    .card-extra {
+      border-top: 1px solid rgba(31,41,55,0.9);
+      margin-top: 0.7rem;
+      padding-top: 0.45rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .extra-item span.label {
+      opacity: 0.8;
     }
 
     .empty-state {
@@ -509,17 +515,17 @@
     <!-- HERO -->
     <header>
       <div class="logo-wrap">
-        <!-- Put blood-alliance-logo.png in same folder as this HTML -->
+        <!-- Optional: put blood-alliance-logo.png in same folder -->
         <img src="blood-alliance-logo.png" alt="Blood Alliance Logo" onerror="this.style.display='none'" />
       </div>
       <h1>Blood Alliance CWL Info</h1>
       <p class="subtitle">
-        Check your LAZY CWL registration or assigned clan. Use filters to find your player and join our Discord for updates.
+        Check your Lazy CWL registration and assigned clan. Use filters and search to find your profile.
       </p>
       <div class="pill-row">
         <span class="pill">Lazy CWL</span>
-        <span class="pill">Google Sheets Powered</span>
-        <span class="pill">Real-time Filter</span>
+        <span class="pill">Sheet2API Powered</span>
+        <span class="pill">Live Player Lookup</span>
       </div>
     </header>
 
@@ -533,27 +539,20 @@
           </select>
         </div>
 
-        <div class="controls-group">
-          <div class="label">Town Hall</div>
-          <select id="filterTH">
-            <option value="all">All TH Levels</option>
-          </select>
-        </div>
-
         <div class="controls-group search-wrap">
           <div class="label">Search</div>
           <span class="search-icon">🔍</span>
           <input
             type="text"
             id="searchInput"
-            placeholder="Search by player name, tag, or Discord username..."
+            placeholder="Search by player name, tag, Discord username or ID..."
           />
         </div>
 
         <div class="top-right-controls">
           <button id="refreshBtn" class="btn">
             ⟳ Refresh
-            <small>from Google Sheets</small>
+            <small>from CWL sheet</small>
           </button>
           <div class="status-text">
             <span id="statusDot" class="dot offline"></span>
@@ -580,7 +579,7 @@
       <div id="emptyState" class="empty-state" style="display:none;">
         <h3>No players found</h3>
         <p>
-          Try changing your filters or searching with a different name / tag / username.
+          Try changing your filters or searching with a different name, tag or Discord username.
         </p>
       </div>
     </section>
@@ -615,16 +614,12 @@
   </div>
 
   <script>
-    // === CONFIG: same as googleSheets.ts ===
-    const GOOGLE_SHEETS_API_KEY = "AIzaSyDB0lrrh6eUR7sXsYga71YgfDcsvKrXK6g";
-    const SPREADSHEET_ID = "1jgLwjwURKg5Uy-30g7VCLCM4Ee4a70tS4WnMoN0Ps18";
-    const SHEET_NAME = "sheet1";
-
+    // === CONFIG: Sheet2API endpoint ===
+    const API_URL = "https://sheet2api.com/v1/90H79qclQcqu/cwl_list";
     const AUTO_REFRESH_INTERVAL = 30000; // 30 seconds
 
     // DOM Elements
     const filterClan = document.getElementById("filterClan");
-    const filterTH = document.getElementById("filterTH");
     const searchInput = document.getElementById("searchInput");
     const refreshBtn = document.getElementById("refreshBtn");
     const cardsGrid = document.getElementById("cardsGrid");
@@ -658,7 +653,7 @@
       if (loading) {
         refreshBtn.classList.add("disabled");
         refreshBtn.textContent = "⟳ Loading…";
-        statusText.textContent = "Loading data from Google Sheets…";
+        statusText.textContent = "Loading data from CWL sheet…";
         statusDot.classList.add("offline");
       } else {
         refreshBtn.classList.remove("disabled");
@@ -666,56 +661,63 @@
       }
     }
 
-    function getSheetsUrl() {
-      const range = encodeURIComponent(SHEET_NAME + "!A2:I");
-      return `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${GOOGLE_SHEETS_API_KEY}`;
+    function getField(row, name) {
+      // Direct mapping with exact column names
+      return row[name] ?? "";
     }
 
     async function loadData(showToastFlag) {
       if (isLoading) return;
       setLoading(true);
       try {
-        const res = await fetch(getSheetsUrl());
+        const res = await fetch(API_URL);
         if (!res.ok) {
           throw new Error("HTTP " + res.status);
         }
         const data = await res.json();
-        const values = (data.values || []);
-        const players = values.map((row, index) => {
+
+        const players = (data || []).map((row, index) => {
+          const playerName = getField(row, "Player Name");
+          const playerTag = getField(row, "Player Tag");
+          const userId = getField(row, "Discord User ID");
+          const username = getField(row, "Discord Username");
+          const assignedClan = getField(row, "Assigned Clan");
+          const assignedClanTag = getField(row, "Assigned Clan Tag");
+          const registeredAt = getField(row, "Registered At");
+
           return {
             id: index + 1,
-            timestamp: row[0] || "",
-            playerName: row[1] || "",
-            playerTag: row[2] || "",
-            townHallLevel: row[3] ? Number(row[3]) : 0,
-            weight: row[4] || "",
-            username: row[5] || "",
-            userId: row[6] || "",
-            clanName: row[7] || "",
-            clanTag: row[8] || "",
+            playerName,
+            playerTag,
+            userId,
+            username,
+            assignedClan,
+            assignedClanTag,
+            registeredAt
           };
         }).filter(p => p.playerName);
 
         allPlayers = players;
+
         if (players.length) {
           statusText.textContent = "Data loaded.";
           statusDot.classList.remove("offline");
         } else {
-          statusText.textContent = "No data found in sheet.";
+          statusText.textContent = "No data found.";
           statusDot.classList.add("offline");
         }
 
         const now = new Date();
-        lastUpdatedText.textContent =
-          "Last updated: " + now.toLocaleString();
+        lastUpdatedText.textContent = "Last updated: " + now.toLocaleString();
 
         populateFilters();
         renderList();
 
         totalCount.textContent = String(allPlayers.length);
         totalCountWrap.style.display = "inline";
+
         if (showToastFlag) {
-          showToast("Data refreshed", "Player list updated from Google Sheets.", false);
+          showToast("Data refreshed", "Player list updated from CWL sheet.", false);
         } else {
           showToast("Welcome", "CWL data loaded successfully.", false);
         }
@@ -724,19 +726,18 @@
         console.error("Error fetching sheet:", err);
         statusText.textContent = "Failed to load data.";
         statusDot.classList.add("offline");
-        showToast("Error", "Failed to load data from Google Sheets.", true);
+        showToast("Error", "Failed to load data from CWL sheet.", true);
       } finally {
         setLoading(false);
       }
     }
 
     function populateFilters() {
-      // Clan filter
       const clansMap = new Map();
       allPlayers.forEach(p => {
-        if (!p.clanTag) return;
-        if (!clansMap.has(p.clanTag)) {
-          clansMap.set(p.clanTag, p.clanName || p.clanTag);
+        if (!p.assignedClanTag) return;
+        if (!clansMap.has(p.assignedClanTag)) {
+          clansMap.set(p.assignedClanTag, p.assignedClan || p.assignedClanTag);
         }
       });
 
@@ -753,113 +754,81 @@
       if (selectedClan && [...filterClan.options].some(o => o.value === selectedClan)) {
         filterClan.value = selectedClan;
       }
-
-      // TH filter
-      const thSet = new Set();
-      allPlayers.forEach(p => {
-        if (p.townHallLevel) thSet.add(p.townHallLevel);
-      });
-
-      const selectedTH = filterTH.value || "all";
-      filterTH.innerHTML = '<option value="all">All TH Levels</option>';
-      Array.from(thSet)
-        .sort((a,b) => a - b)
-        .forEach(th => {
-          const opt = document.createElement("option");
-          opt.value = String(th);
-          opt.textContent = `TH ${th}`;
-          filterTH.appendChild(opt);
-        });
-      if (selectedTH && [...filterTH.options].some(o => o.value === selectedTH)) {
-        filterTH.value = selectedTH;
-      }
     }
 
     function buildPlayerCard(player) {
       const card = document.createElement("div");
       card.className = "card";
 
-      const grid = document.createElement("div");
-      grid.className = "card-grid";
-      card.appendChild(grid);
+      const main = document.createElement("div");
+      main.className = "card-main";
+      card.appendChild(main);
 
-      // Column 1: Player
-      const col1 = document.createElement("div");
-      const nameLabel = document.createElement("div");
-      nameLabel.className = "card-label";
-      nameLabel.textContent = "Player";
-      const name = document.createElement("div");
-      name.className = "player-name";
-      name.innerHTML = `${escapeHtml(player.playerName)} <span class="badge">${escapeHtml(player.playerTag || "No tag")}</span>`;
-      col1.appendChild(nameLabel);
-      col1.appendChild(name);
-      grid.appendChild(col1);
+      // Left side: Player + Discord + Registered
+      const left = document.createElement("div");
 
-      // Column 2: TH + Weight
-      const col2 = document.createElement("div");
-      const thLabel = document.createElement("div");
-      thLabel.className = "card-label";
-      thLabel.textContent = "Town Hall & Weight";
-      const thLine = document.createElement("div");
-      thLine.className = "pill-th";
-      const thSpan = document.createElement("span");
-      thSpan.textContent = player.townHallLevel ? `TH ${player.townHallLevel}` : "TH ?";
-      const thDot = document.createElement("span");
-      thDot.textContent = "•";
-      thDot.style.opacity = "0.7";
-      const weightSpan = document.createElement("span");
-      weightSpan.textContent = player.weight || "No weight";
-      thLine.appendChild(thSpan);
-      thLine.appendChild(thDot);
-      thLine.appendChild(weightSpan);
+      const playerLabel = document.createElement("div");
+      playerLabel.className = "section-label";
+      playerLabel.textContent = "Player";
+      left.appendChild(playerLabel);
 
-      const weight = document.createElement("div");
-      weight.className = "weight";
-      weight.textContent = player.timestamp ? `Registered: ${player.timestamp}` : "";
-      col2.appendChild(thLabel);
-      col2.appendChild(thLine);
-      col2.appendChild(weight);
-      grid.appendChild(col2);
+      const nameRow = document.createElement("div");
+      nameRow.className = "player-name";
+      nameRow.innerHTML = `${escapeHtml(player.playerName)} <span class="badge">${escapeHtml(player.playerTag || "No tag")}</span>`;
+      left.appendChild(nameRow);
 
-      // Column 3: Discord
-      const col3 = document.createElement("div");
-      const dLabel = document.createElement("div");
-      dLabel.className = "card-label";
-      dLabel.textContent = "Discord";
+      const reg = document.createElement("div");
+      reg.className = "registered";
+      reg.textContent = player.registeredAt ? `Registered: ${player.registeredAt}` : "";
+      left.appendChild(reg);
+
+      const discLabel = document.createElement("div");
+      discLabel.className = "section-label";
+      discLabel.style.marginTop = "0.9rem";
+      discLabel.textContent = "Discord";
+      left.appendChild(discLabel);
+
       const username = document.createElement("div");
       username.className = "username";
       username.textContent = player.username || "Not provided";
+      left.appendChild(username);
+
       const userId = document.createElement("div");
       userId.className = "user-id";
       userId.textContent = player.userId ? `ID: ${player.userId}` : "";
-      col3.appendChild(dLabel);
-      col3.appendChild(username);
-      col3.appendChild(userId);
-      grid.appendChild(col3);
+      left.appendChild(userId);
 
-      // Column 4: Clan links
-      const col4 = document.createElement("div");
-      col4.className = "links";
+      main.appendChild(left);
+
+      // Right side: Clan + buttons
+      const right = document.createElement("div");
+
       const clanLabel = document.createElement("div");
-      clanLabel.className = "card-label";
+      clanLabel.className = "section-label";
+      clanLabel.style.textAlign = "right";
       clanLabel.textContent = "Clan";
+      right.appendChild(clanLabel);
 
-      const clanNameLine = document.createElement("div");
-      clanNameLine.style.fontSize = "0.88rem";
-      clanNameLine.style.fontWeight = "600";
-      clanNameLine.textContent = player.clanName || "No clan";
+      const clanName = document.createElement("div");
+      clanName.className = "clan-name";
+      clanName.textContent = player.assignedClan || "No clan";
+      right.appendChild(clanName);
 
-      const clanTagLine = document.createElement("div");
-      clanTagLine.style.fontSize = "0.78rem";
-      clanTagLine.style.color = "var(--muted)";
-      clanTagLine.textContent = player.clanTag || "";
+      const clanTag = document.createElement("div");
+      clanTag.className = "clan-tag";
+      clanTag.textContent = player.assignedClanTag || "";
+      right.appendChild(clanTag);
+
+      const links = document.createElement("div");
+      links.className = "links";
 
       const clanBtn = document.createElement("a");
       clanBtn.className = "link-btn";
-      clanBtn.href = getClanLink(player.clanTag);
+      clanBtn.href = getClanLink(player.assignedClanTag);
       clanBtn.target = "_blank";
       clanBtn.rel = "noopener noreferrer";
       clanBtn.textContent = "Open Clan";
+      links.appendChild(clanBtn);
 
       const playerBtn = document.createElement("a");
       playerBtn.className = "link-btn main";
@@ -867,13 +836,10 @@
       playerBtn.target = "_blank";
       playerBtn.rel = "noopener noreferrer";
       playerBtn.textContent = "Open Player";
+      links.appendChild(playerBtn);
 
-      col4.appendChild(clanLabel);
-      col4.appendChild(clanNameLine);
-      col4.appendChild(clanTagLine);
-      col4.appendChild(clanBtn);
-      col4.appendChild(playerBtn);
-      grid.appendChild(col4);
+      right.appendChild(links);
+      main.appendChild(right);
 
       return card;
     }
@@ -892,31 +858,26 @@
 
     function renderList() {
       const selectedClan = filterClan.value || "all";
-      const selectedTH = filterTH.value || "all";
       const q = (searchInput.value || "").trim().toLowerCase();
 
       const filtered = allPlayers.filter(p => {
         const matchClan =
-          selectedClan === "all" || (p.clanTag && p.clanTag === selectedClan);
-
-        const thStr = p.townHallLevel ? String(p.townHallLevel) : "";
-        const matchTH =
-          selectedTH === "all" || (thStr && thStr === selectedTH);
+          selectedClan === "all" || (p.assignedClanTag && p.assignedClanTag === selectedClan);
 
         const haystack = [
           p.playerName,
           p.playerTag,
           p.username,
           p.userId,
-          p.clanName,
-          p.clanTag
+          p.assignedClan,
+          p.assignedClanTag
         ]
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
 
         const matchSearch = q === "" || haystack.includes(q);
-        return matchClan && matchTH && matchSearch;
+        return matchClan && matchSearch;
       });
 
       cardsGrid.innerHTML = "";
@@ -944,10 +905,7 @@
 
     // Event listeners
     filterClan.addEventListener("change", renderList);
-    filterTH.addEventListener("change", renderList);
-    searchInput.addEventListener("input", function () {
-      renderList();
-    });
+    searchInput.addEventListener("input", renderList);
 
     refreshBtn.addEventListener("click", function () {
       if (!isLoading) {
