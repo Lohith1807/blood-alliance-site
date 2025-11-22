@@ -8,7 +8,6 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
-
   <style>
     :root {
       --bg: #050816;
@@ -516,6 +515,7 @@
     <!-- HERO -->
     <header>
       <div class="logo-wrap">
+        <!-- Optional: put blood-alliance-logo.png in same folder -->
         <img src="blood-alliance-logo.png" alt="Blood Alliance Logo" onerror="this.style.display='none'" />
       </div>
       <h1>Blood Alliance CWL Info</h1>
@@ -524,6 +524,7 @@
       </p>
       <div class="pill-row">
         <span class="pill">Lazy CWL</span>
+        <span class="pill">Sheet2API Powered</span>
         <span class="pill">Live Player Lookup</span>
       </div>
     </header>
@@ -571,7 +572,9 @@
         <div id="lastUpdatedText">Last updated: --</div>
       </div>
 
-      <div id="cardsGrid" class="cards-grid"></div>
+      <div id="cardsGrid" class="cards-grid">
+        <!-- Player cards injected by JS -->
+      </div>
 
       <div id="emptyState" class="empty-state" style="display:none;">
         <h3>No players found</h3>
@@ -590,7 +593,11 @@
           <img src="blood-alliance-logo.png" alt="Blood Alliance" onerror="this.style.display='none'">
           <div>
             <div>Blood Alliance &middot; Lazy CWL</div>
-            <a href="https://discord.gg/gGGEs5SV9z" target="_blank" class="discord-link">
+            <a
+              href="https://discord.gg/gGGEs5SV9z"
+              target="_blank"
+              class="discord-link"
+            >
               <span>Join our Discord</span>
             </a>
           </div>
@@ -607,9 +614,11 @@
   </div>
 
   <script>
+    // === CONFIG: Sheet2API endpoint ===
     const API_URL = "https://sheet2api.com/v1/90H79qclQcqu/cwl_list";
-    const AUTO_REFRESH_INTERVAL = 30000;
+    const AUTO_REFRESH_INTERVAL = 30000; // 30 seconds
 
+    // DOM Elements
     const filterClan = document.getElementById("filterClan");
     const searchInput = document.getElementById("searchInput");
     const refreshBtn = document.getElementById("refreshBtn");
@@ -634,7 +643,9 @@
       toastMessage.textContent = message;
       toast.classList.toggle("toast-error", !!isError);
       toast.classList.add("visible");
-      setTimeout(() => toast.classList.remove("visible"), 3000);
+      setTimeout(() => {
+        toast.classList.remove("visible");
+      }, 3000);
     }
 
     function setLoading(loading) {
@@ -651,6 +662,7 @@
     }
 
     function getField(row, name) {
+      // Direct mapping with exact column names
       return row[name] ?? "";
     }
 
@@ -658,32 +670,45 @@
       if (isLoading) return;
       setLoading(true);
       try {
-        const res = await fetch(API_URL + "?t=" + Date.now(), {
-          cache: "no-store",
-          headers: { "Cache-Control": "no-cache" }
-        });
-
+        const res = await fetch(API_URL);
+        if (!res.ok) {
+          throw new Error("HTTP " + res.status);
+        }
         const data = await res.json();
 
         const players = (data || []).map((row, index) => {
+          const playerName = getField(row, "Player Name");
+          const playerTag = getField(row, "Player Tag");
+          const userId = getField(row, "Discord User ID");
+          const username = getField(row, "Discord Username");
+          const assignedClan = getField(row, "Assigned Clan");
+          const assignedClanTag = getField(row, "Assigned Clan Tag");
+          const registeredAt = getField(row, "Registered At");
+
           return {
             id: index + 1,
-            playerName: getField(row, "Player Name"),
-            playerTag: getField(row, "Player Tag"),
-            userId: getField(row, "Discord User ID"),
-            username: getField(row, "Discord Username"),
-            assignedClanTag: getField(row, "Assigned Clan Tag"),
-            assignedClan: getField(row, "Assigned Clan Name"),
-            registeredAt: getField(row, "Registered At")
+            playerName,
+            playerTag,
+            userId,
+            username,
+            assignedClan,
+            assignedClanTag,
+            registeredAt
           };
         }).filter(p => p.playerName);
 
         allPlayers = players;
 
-        statusText.textContent = players.length ? "Data loaded." : "No data found.";
-        statusDot.classList.toggle("offline", players.length === 0);
+        if (players.length) {
+          statusText.textContent = "Data loaded.";
+          statusDot.classList.remove("offline");
+        } else {
+          statusText.textContent = "No data found.";
+          statusDot.classList.add("offline");
+        }
 
-        lastUpdatedText.textContent = "Last updated: " + new Date().toLocaleString();
+        const now = new Date();
+        lastUpdatedText.textContent = "Last updated: " + now.toLocaleString();
 
         populateFilters();
         renderList();
@@ -691,14 +716,17 @@
         totalCount.textContent = String(allPlayers.length);
         totalCountWrap.style.display = "inline";
 
-        showToast(showToastFlag ? "Data refreshed" : "Welcome",
-                  showToastFlag ? "Player list updated." : "CWL data loaded.",
-                  false);
+        if (showToastFlag) {
+          showToast("Data refreshed", "Player list updated from CWL sheet.", false);
+        } else {
+          showToast("Welcome", "CWL data loaded successfully.", false);
+        }
 
       } catch (err) {
+        console.error("Error fetching sheet:", err);
         statusText.textContent = "Failed to load data.";
         statusDot.classList.add("offline");
-        showToast("Error", "Failed to load data.", true);
+        showToast("Error", "Failed to load data from CWL sheet.", true);
       } finally {
         setLoading(false);
       }
@@ -707,25 +735,24 @@
     function populateFilters() {
       const clansMap = new Map();
       allPlayers.forEach(p => {
-        if (p.assignedClanTag && !clansMap.has(p.assignedClanTag)) {
+        if (!p.assignedClanTag) return;
+        if (!clansMap.has(p.assignedClanTag)) {
           clansMap.set(p.assignedClanTag, p.assignedClan || p.assignedClanTag);
         }
       });
 
-      const selected = filterClan.value || "all";
+      const selectedClan = filterClan.value || "all";
       filterClan.innerHTML = '<option value="all">All Clans</option>';
-
       Array.from(clansMap.entries())
-        .sort((a, b) => a[1].localeCompare(b[1]))
+        .sort((a,b) => a[1].localeCompare(b[1]))
         .forEach(([tag, name]) => {
           const opt = document.createElement("option");
           opt.value = tag;
           opt.textContent = `${name} (${tag})`;
           filterClan.appendChild(opt);
         });
-
-      if ([...filterClan.options].some(o => o.value === selected)) {
-        filterClan.value = selected;
+      if (selectedClan && [...filterClan.options].some(o => o.value === selectedClan)) {
+        filterClan.value = selectedClan;
       }
     }
 
@@ -733,31 +760,87 @@
       const card = document.createElement("div");
       card.className = "card";
 
-      card.innerHTML = `
-        <div class="card-main">
-          <div>
-            <div class="section-label">Player</div>
-            <div class="player-name">
-              ${escapeHtml(player.playerName)}
-              <span class="badge">${escapeHtml(player.playerTag || "No tag")}</span>
-            </div>
-            <div class="registered">${player.registeredAt ? `Registered: ${player.registeredAt}` : ""}</div>
-            <div class="section-label" style="margin-top:0.9rem;">Discord</div>
-            <div class="username">${player.username || "Not provided"}</div>
-            <div class="user-id">${player.userId ? `ID: ${player.userId}` : ""}</div>
-          </div>
+      const main = document.createElement("div");
+      main.className = "card-main";
+      card.appendChild(main);
 
-          <div>
-            <div class="section-label" style="text-align:right;">Clan</div>
-            <div class="clan-name">${player.assignedClan || "No clan"}</div>
-            <div class="clan-tag">${player.assignedClanTag || ""}</div>
-            <div class="links">
-              <a class="link-btn" href="${getClanLink(player.assignedClanTag)}" target="_blank">Open Clan</a>
-              <a class="link-btn main" href="${getPlayerLink(player.playerTag)}" target="_blank">Open Player</a>
-            </div>
-          </div>
-        </div>
-      `;
+      // Left side: Player + Discord + Registered
+      const left = document.createElement("div");
+
+      const playerLabel = document.createElement("div");
+      playerLabel.className = "section-label";
+      playerLabel.textContent = "Player";
+      left.appendChild(playerLabel);
+
+      const nameRow = document.createElement("div");
+      nameRow.className = "player-name";
+      nameRow.innerHTML = `${escapeHtml(player.playerName)} <span class="badge">${escapeHtml(player.playerTag || "No tag")}</span>`;
+      left.appendChild(nameRow);
+
+      const reg = document.createElement("div");
+      reg.className = "registered";
+      reg.textContent = player.registeredAt ? `Registered: ${player.registeredAt}` : "";
+      left.appendChild(reg);
+
+      const discLabel = document.createElement("div");
+      discLabel.className = "section-label";
+      discLabel.style.marginTop = "0.9rem";
+      discLabel.textContent = "Discord";
+      left.appendChild(discLabel);
+
+      const username = document.createElement("div");
+      username.className = "username";
+      username.textContent = player.username || "Not provided";
+      left.appendChild(username);
+
+      const userId = document.createElement("div");
+      userId.className = "user-id";
+      userId.textContent = player.userId ? `ID: ${player.userId}` : "";
+      left.appendChild(userId);
+
+      main.appendChild(left);
+
+      // Right side: Clan + buttons
+      const right = document.createElement("div");
+
+      const clanLabel = document.createElement("div");
+      clanLabel.className = "section-label";
+      clanLabel.style.textAlign = "right";
+      clanLabel.textContent = "Clan";
+      right.appendChild(clanLabel);
+
+      const clanName = document.createElement("div");
+      clanName.className = "clan-name";
+      clanName.textContent = player.assignedClan || "No clan";
+      right.appendChild(clanName);
+
+      const clanTag = document.createElement("div");
+      clanTag.className = "clan-tag";
+      clanTag.textContent = player.assignedClanTag || "";
+      right.appendChild(clanTag);
+
+      const links = document.createElement("div");
+      links.className = "links";
+
+      const clanBtn = document.createElement("a");
+      clanBtn.className = "link-btn";
+      clanBtn.href = getClanLink(player.assignedClanTag);
+      clanBtn.target = "_blank";
+      clanBtn.rel = "noopener noreferrer";
+      clanBtn.textContent = "Open Clan";
+      links.appendChild(clanBtn);
+
+      const playerBtn = document.createElement("a");
+      playerBtn.className = "link-btn main";
+      playerBtn.href = getPlayerLink(player.playerTag);
+      playerBtn.target = "_blank";
+      playerBtn.rel = "noopener noreferrer";
+      playerBtn.textContent = "Open Player";
+      links.appendChild(playerBtn);
+
+      right.appendChild(links);
+      main.appendChild(right);
+
       return card;
     }
 
@@ -779,7 +862,7 @@
 
       const filtered = allPlayers.filter(p => {
         const matchClan =
-          selectedClan === "all" || (p.assignedClanTag === selectedClan);
+          selectedClan === "all" || (p.assignedClanTag && p.assignedClanTag === selectedClan);
 
         const haystack = [
           p.playerName,
@@ -793,7 +876,8 @@
           .join(" ")
           .toLowerCase();
 
-        return matchClan && (q === "" || haystack.includes(q));
+        const matchSearch = q === "" || haystack.includes(q);
+        return matchClan && matchSearch;
       });
 
       cardsGrid.innerHTML = "";
@@ -802,13 +886,16 @@
         shownCount.textContent = "0";
       } else {
         emptyState.style.display = "none";
-        filtered.forEach(p => cardsGrid.appendChild(buildPlayerCard(p)));
+        filtered.forEach(p => {
+          cardsGrid.appendChild(buildPlayerCard(p));
+        });
         shownCount.textContent = String(filtered.length);
       }
     }
 
     function escapeHtml(str) {
-      return !str ? "" : String(str)
+      if (!str) return "";
+      return String(str)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -816,18 +903,26 @@
         .replace(/'/g, "&#039;");
     }
 
+    // Event listeners
     filterClan.addEventListener("change", renderList);
     searchInput.addEventListener("input", renderList);
 
-    refreshBtn.addEventListener("click", () => {
-      if (!isLoading) loadData(true);
+    refreshBtn.addEventListener("click", function () {
+      if (!isLoading) {
+        loadData(true);
+      }
     });
 
     function startAutoRefresh() {
-      if (autoRefreshTimer) clearInterval(autoRefreshTimer);
-      autoRefreshTimer = setInterval(() => loadData(false), AUTO_REFRESH_INTERVAL);
+      if (autoRefreshTimer) {
+        clearInterval(autoRefreshTimer);
+      }
+      autoRefreshTimer = setInterval(() => {
+        loadData(false);
+      }, AUTO_REFRESH_INTERVAL);
     }
 
+    // Initial load
     loadData(false);
     startAutoRefresh();
   </script>
