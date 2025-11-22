@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blood Alliance CWL Info</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #050816;
+      --bg2: #050816;
+      --card: #0b1020;
+      --border: #22263a;
+      --primary: #f97316;
+      --accent: #22c55e;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #ef4444;
+      --radius: 14px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    header {
+      padding-top: 5rem;
+      padding-bottom: 3rem;
+      text-align: center;
+    }
+
+    .logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .logo-wrap img {
+      height: 160px;
+      width: 160px;
+      object-fit: contain;
+      border-radius: 50%;
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
+      background: radial-gradient(circle, #111827, #020617);
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #f97316, #22c55e, #f97316);
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    .pill-row {
+      margin-top: 0.75rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(248, 250, 252, 0.08);
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    /* Controls / Filters */
+    .controls {
+      background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+      border-radius: var(--radius);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 1.25rem 1.25rem 1rem;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .controls-group {
+      flex: 1 1 180px;
+      min-width: 170px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    select,
+    input[type="text"] {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      border-radius: 0.55rem;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border 0.15s, box-shadow 0.15s;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(249,115,22,0.4);
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap input {
+      padding-left: 2.1rem;
+    }
+
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      left: 0.7rem;
+      transform: translateY(-50%);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .top-right-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.4rem;
+      min-width: 150px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: linear-gradient(90deg, #22c55e, #f97316);
+      color: #020617;
+      border: none;
+      border-radius: 999px;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 25px rgba(34, 197, 94, 0.4);
+      transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
+      white-space: nowrap;
+    }
+
+    .btn.disabled {
+      opacity: 0.7;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .btn:not(.disabled):hover {
+      transform: translateY(-1px) scale(1.02);
+      filter: brightness(1.05);
+      box-shadow: 0 16px 30px rgba(34, 197, 94, 0.6);
+    }
+
+    .btn small {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #0b1120;
+      opacity: 0.8;
+    }
+
+    .status-text {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      margin-right: 4px;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(34,197,94,0.9);
+    }
+
+    .dot.offline {
+      background: var(--muted);
+      box-shadow: none;
+    }
+
+    /* Cards list */
+    .cards-wrapper {
+      margin-top: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .list-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 0.9rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .list-meta strong {
+      color: var(--accent);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+    }
+
+    @media (min-width: 768px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(249,115,22,0.16), transparent 55%),
+                  radial-gradient(circle at bottom, rgba(34,197,94,0.06), transparent 55%),
+                  rgba(15,23,42,0.95);
+      padding: 0.9rem 1rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.75);
+      transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s, background 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(248,250,252,0.35);
+      box-shadow: 0 26px 60px rgba(15,23,42,0.9);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1.2fr 1fr 0.8fr;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .card-grid {
+        grid-template-columns: 1.4fr 1.4fr;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .player-name {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--muted);
+      background: rgba(15,23,42,0.9);
+      margin-left: 0.35rem;
+    }
+
+    .pill-th {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      border: 1px solid rgba(248, 250, 252, 0.4);
+      background: rgba(15,23,42,0.98);
+    }
+
+    .pill-th span {
+      font-size: 0.78rem;
+    }
+
+    .weight {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+
+    .username {
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .user-id {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+      word-break: break-all;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.35rem;
+    }
+
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, transform 0.12s;
+      white-space: nowrap;
+    }
+
+    .link-btn:hover {
+      background: rgba(30,64,175,0.9);
+      border-color: rgba(248,250,252,0.7);
+      transform: translateY(-1px);
+    }
+
+    .link-btn.main {
+      border-color: rgba(249,115,22,0.9);
+      background: linear-gradient(90deg, #f97316, #ec4899);
+      color: #020617;
+      font-weight: 600;
+    }
+
+    .link-btn.main:hover {
+      background: linear-gradient(90deg, #fb923c, #f472b6);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem 2.5rem;
+      border-radius: var(--radius);
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      background: rgba(15,23,42,0.8);
+      margin-top: 1.5rem;
+    }
+
+    .empty-state h3 {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .empty-state p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    /* Footer */
+    footer {
+      padding: 1.7rem 0 2.3rem;
+      border-top: 1px solid rgba(31, 41, 55, 0.85);
+      background: radial-gradient(circle at top, rgba(15,23,42,0.85), #020617 60%);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer-brand img {
+      height: 32px;
+      width: 32px;
+      border-radius: 10px;
+      object-fit: contain;
+      background: #020617;
+      box-shadow: 0 0 14px rgba(248,250,252,0.3);
+    }
+
+    .discord-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+      margin-top: 0.2rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(96,165,250,0.9);
+      background: rgba(15,23,42,0.9);
+      color: #bfdbfe;
+      font-size: 0.78rem;
+      transition: background 0.12s, border-color 0.12s, transform 0.12s;
+    }
+
+    .discord-link:hover {
+      background: #1d4ed8;
+      border-color: #93c5fd;
+      transform: translateY(-1px);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 1.4rem;
+      right: 1.4rem;
+      background: rgba(15,23,42,0.95);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(148,163,184,0.7);
+      font-size: 0.8rem;
+      max-width: 260px;
+      color: var(--text);
+      box-shadow: 0 18px 35px rgba(15,23,42,0.9);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.15s, transform 0.15s;
+      z-index: 50;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .toast-title {
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .toast-error {
+      border-color: rgba(248,113,113,0.8);
+    }
+
+    .toast-error .toast-title {
+      color: var(--danger);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HERO -->
+    <header>
+      <div class="logo-wrap">
+        <!-- Put blood-alliance-logo.png in same folder as this HTML -->
+        <img src="blood-alliance-logo.png" alt="Blood Alliance Logo" onerror="this.style.display='none'" />
+      </div>
+      <h1>Blood Alliance CWL Info</h1>
+      <p class="subtitle">
+        Check your LAZY CWL registration or assigned clan. Use filters to find your player and join our Discord for updates.
+      </p>
+      <div class="pill-row">
+        <span class="pill">Lazy CWL</span>
+        <span class="pill">Google Sheets Powered</span>
+        <span class="pill">Real-time Filter</span>
+      </div>
+    </header>
+
+    <!-- CONTROLS -->
+    <section class="controls">
+      <div class="controls-row">
+        <div class="controls-group">
+          <div class="label">Clan</div>
+          <select id="filterClan">
+            <option value="all">All Clans</option>
+          </select>
+        </div>
+
+        <div class="controls-group">
+          <div class="label">Town Hall</div>
+          <select id="filterTH">
+            <option value="all">All TH Levels</option>
+          </select>
+        </div>
+
+        <div class="controls-group search-wrap">
+          <div class="label">Search</div>
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by player name, tag, or Discord username..."
+          />
+        </div>
+
+        <div class="top-right-controls">
+          <button id="refreshBtn" class="btn">
+            ⟳ Refresh
+            <small>from Google Sheets</small>
+          </button>
+          <div class="status-text">
+            <span id="statusDot" class="dot offline"></span>
+            <span id="statusText">Waiting to load data…</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIST / CARDS -->
+    <section class="cards-wrapper">
+      <div class="list-meta">
+        <div>
+          Showing <strong><span id="shownCount">0</span></strong> players
+          <span id="totalCountWrap">(out of <span id="totalCount">0</span>)</span>
+        </div>
+        <div id="lastUpdatedText">Last updated: --</div>
+      </div>
+
+      <div id="cardsGrid" class="cards-grid">
+        <!-- Player cards injected by JS -->
+      </div>
+
+      <div id="emptyState" class="empty-state" style="display:none;">
+        <h3>No players found</h3>
+        <p>
+          Try changing your filters or searching with a different name / tag / username.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="blood-alliance-logo.png" alt="Blood Alliance" onerror="this.style.display='none'">
+          <div>
+            <div>Blood Alliance &middot; Lazy CWL</div>
+            <a
+              href="https://discord.gg/gGGEs5SV9z"
+              target="_blank"
+              class="discord-link"
+            >
+              <span>Join our Discord</span>
+            </a>
+          </div>
+        </div>
+        <div>© 2025 Blood Alliance. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <div class="toast-title" id="toastTitle"></div>
+    <div id="toastMessage"></div>
+  </div>
+
+  <script>
+    // === CONFIG: same as googleSheets.ts ===
+    const GOOGLE_SHEETS_API_KEY = "AIzaSyDB0lrrh6eUR7sXsYga71YgfDcsvKrXK6g";
+    const SPREADSHEET_ID = "1jgLwjwURKg5Uy-30g7VCLCM4Ee4a70tS4WnMoN0Ps18";
+    const SHEET_NAME = "sheet1";
+
+    const AUTO_REFRESH_INTERVAL = 30000; // 30 seconds
+
+    // DOM Elements
+    const filterClan = document.getElementById("filterClan");
+    const filterTH = document.getElementById("filterTH");
+    const searchInput = document.getElementById("searchInput");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const cardsGrid = document.getElementById("cardsGrid");
+    const emptyState = document.getElementById("emptyState");
+    const shownCount = document.getElementById("shownCount");
+    const totalCount = document.getElementById("totalCount");
+    const totalCountWrap = document.getElementById("totalCountWrap");
+    const lastUpdatedText = document.getElementById("lastUpdatedText");
+    const statusText = document.getElementById("statusText");
+    const statusDot = document.getElementById("statusDot");
+    const toast = document.getElementById("toast");
+    const toastTitle = document.getElementById("toastTitle");
+    const toastMessage = document.getElementById("toastMessage");
+
+    let allPlayers = [];
+    let isLoading = false;
+    let autoRefreshTimer = null;
+
+    function showToast(title, message, isError) {
+      toastTitle.textContent = title;
+      toastMessage.textContent = message;
+      toast.classList.toggle("toast-error", !!isError);
+      toast.classList.add("visible");
+      setTimeout(() => {
+        toast.classList.remove("visible");
+      }, 3000);
+    }
+
+    function setLoading(loading) {
+      isLoading = loading;
+      if (loading) {
+        refreshBtn.classList.add("disabled");
+        refreshBtn.textContent = "⟳ Loading…";
+        statusText.textContent = "Loading data from Google Sheets…";
+        statusDot.classList.add("offline");
+      } else {
+        refreshBtn.classList.remove("disabled");
+        refreshBtn.textContent = "⟳ Refresh";
+      }
+    }
+
+    function getSheetsUrl() {
+      const range = encodeURIComponent(SHEET_NAME + "!A2:I");
+      return `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${GOOGLE_SHEETS_API_KEY}`;
+    }
+
+    async function loadData(showToastFlag) {
+      if (isLoading) return;
+      setLoading(true);
+      try {
+        const res = await fetch(getSheetsUrl());
+        if (!res.ok) {
+          throw new Error("HTTP " + res.status);
+        }
+        const data = await res.json();
+        const values = (data.values || []);
+        const players = values.map((row, index) => {
+          return {
+            id: index + 1,
+            timestamp: row[0] || "",
+            playerName: row[1] || "",
+            playerTag: row[2] || "",
+            townHallLevel: row[3] ? Number(row[3]) : 0,
+            weight: row[4] || "",
+            username: row[5] || "",
+            userId: row[6] || "",
+            clanName: row[7] || "",
+            clanTag: row[8] || "",
+          };
+        }).filter(p => p.playerName);
+
+        allPlayers = players;
+        if (players.length) {
+          statusText.textContent = "Data loaded.";
+          statusDot.classList.remove("offline");
+        } else {
+          statusText.textContent = "No data found in sheet.";
+          statusDot.classList.add("offline");
+        }
+
+        const now = new Date();
+        lastUpdatedText.textContent =
+          "Last updated: " + now.toLocaleString();
+
+        populateFilters();
+        renderList();
+
+        totalCount.textContent = String(allPlayers.length);
+        totalCountWrap.style.display = "inline";
+        if (showToastFlag) {
+          showToast("Data refreshed", "Player list updated from Google Sheets.", false);
+        } else {
+          showToast("Welcome", "CWL data loaded successfully.", false);
+        }
+
+      } catch (err) {
+        console.error("Error fetching sheet:", err);
+        statusText.textContent = "Failed to load data.";
+        statusDot.classList.add("offline");
+        showToast("Error", "Failed to load data from Google Sheets.", true);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function populateFilters() {
+      // Clan filter
+      const clansMap = new Map();
+      allPlayers.forEach(p => {
+        if (!p.clanTag) return;
+        if (!clansMap.has(p.clanTag)) {
+          clansMap.set(p.clanTag, p.clanName || p.clanTag);
+        }
+      });
+
+      const selectedClan = filterClan.value || "all";
+      filterClan.innerHTML = '<option value="all">All Clans</option>';
+      Array.from(clansMap.entries())
+        .sort((a,b) => a[1].localeCompare(b[1]))
+        .forEach(([tag, name]) => {
+          const opt = document.createElement("option");
+          opt.value = tag;
+          opt.textContent = `${name} (${tag})`;
+          filterClan.appendChild(opt);
+        });
+      if (selectedClan && [...filterClan.options].some(o => o.value === selectedClan)) {
+        filterClan.value = selectedClan;
+      }
+
+      // TH filter
+      const thSet = new Set();
+      allPlayers.forEach(p => {
+        if (p.townHallLevel) thSet.add(p.townHallLevel);
+      });
+
+      const selectedTH = filterTH.value || "all";
+      filterTH.innerHTML = '<option value="all">All TH Levels</option>';
+      Array.from(thSet)
+        .sort((a,b) => a - b)
+        .forEach(th => {
+          const opt = document.createElement("option");
+          opt.value = String(th);
+          opt.textContent = `TH ${th}`;
+          filterTH.appendChild(opt);
+        });
+      if (selectedTH && [...filterTH.options].some(o => o.value === selectedTH)) {
+        filterTH.value = selectedTH;
+      }
+    }
+
+    function buildPlayerCard(player) {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const grid = document.createElement("div");
+      grid.className = "card-grid";
+      card.appendChild(grid);
+
+      // Column 1: Player
+      const col1 = document.createElement("div");
+      const nameLabel = document.createElement("div");
+      nameLabel.className = "card-label";
+      nameLabel.textContent = "Player";
+      const name = document.createElement("div");
+      name.className = "player-name";
+      name.innerHTML = `${escapeHtml(player.playerName)} <span class="badge">${escapeHtml(player.playerTag || "No tag")}</span>`;
+      col1.appendChild(nameLabel);
+      col1.appendChild(name);
+      grid.appendChild(col1);
+
+      // Column 2: TH + Weight
+      const col2 = document.createElement("div");
+      const thLabel = document.createElement("div");
+      thLabel.className = "card-label";
+      thLabel.textContent = "Town Hall & Weight";
+      const thLine = document.createElement("div");
+      thLine.className = "pill-th";
+      const thSpan = document.createElement("span");
+      thSpan.textContent = player.townHallLevel ? `TH ${player.townHallLevel}` : "TH ?";
+      const thDot = document.createElement("span");
+      thDot.textContent = "•";
+      thDot.style.opacity = "0.7";
+      const weightSpan = document.createElement("span");
+      weightSpan.textContent = player.weight || "No weight";
+      thLine.appendChild(thSpan);
+      thLine.appendChild(thDot);
+      thLine.appendChild(weightSpan);
+
+      const weight = document.createElement("div");
+      weight.className = "weight";
+      weight.textContent = player.timestamp ? `Registered: ${player.timestamp}` : "";
+      col2.appendChild(thLabel);
+      col2.appendChild(thLine);
+      col2.appendChild(weight);
+      grid.appendChild(col2);
+
+      // Column 3: Discord
+      const col3 = document.createElement("div");
+      const dLabel = document.createElement("div");
+      dLabel.className = "card-label";
+      dLabel.textContent = "Discord";
+      const username = document.createElement("div");
+      username.className = "username";
+      username.textContent = player.username || "Not provided";
+      const userId = document.createElement("div");
+      userId.className = "user-id";
+      userId.textContent = player.userId ? `ID: ${player.userId}` : "";
+      col3.appendChild(dLabel);
+      col3.appendChild(username);
+      col3.appendChild(userId);
+      grid.appendChild(col3);
+
+      // Column 4: Clan links
+      const col4 = document.createElement("div");
+      col4.className = "links";
+      const clanLabel = document.createElement("div");
+      clanLabel.className = "card-label";
+      clanLabel.textContent = "Clan";
+
+      const clanNameLine = document.createElement("div");
+      clanNameLine.style.fontSize = "0.88rem";
+      clanNameLine.style.fontWeight = "600";
+      clanNameLine.textContent = player.clanName || "No clan";
+
+      const clanTagLine = document.createElement("div");
+      clanTagLine.style.fontSize = "0.78rem";
+      clanTagLine.style.color = "var(--muted)";
+      clanTagLine.textContent = player.clanTag || "";
+
+      const clanBtn = document.createElement("a");
+      clanBtn.className = "link-btn";
+      clanBtn.href = getClanLink(player.clanTag);
+      clanBtn.target = "_blank";
+      clanBtn.rel = "noopener noreferrer";
+      clanBtn.textContent = "Open Clan";
+
+      const playerBtn = document.createElement("a");
+      playerBtn.className = "link-btn main";
+      playerBtn.href = getPlayerLink(player.playerTag);
+      playerBtn.target = "_blank";
+      playerBtn.rel = "noopener noreferrer";
+      playerBtn.textContent = "Open Player";
+
+      col4.appendChild(clanLabel);
+      col4.appendChild(clanNameLine);
+      col4.appendChild(clanTagLine);
+      col4.appendChild(clanBtn);
+      col4.appendChild(playerBtn);
+      grid.appendChild(col4);
+
+      return card;
+    }
+
+    function getPlayerLink(tag) {
+      if (!tag) return "https://link.clashofclans.com/";
+      const cleaned = tag.replace("#", "");
+      return `https://link.clashofclans.com/?action=OpenPlayerProfile&tag=%23${encodeURIComponent(cleaned)}`;
+    }
+
+    function getClanLink(tag) {
+      if (!tag) return "https://link.clashofclans.com/";
+      const cleaned = tag.replace("#", "");
+      return `https://link.clashofclans.com/?action=OpenClanProfile&tag=%23${encodeURIComponent(cleaned)}`;
+    }
+
+    function renderList() {
+      const selectedClan = filterClan.value || "all";
+      const selectedTH = filterTH.value || "all";
+      const q = (searchInput.value || "").trim().toLowerCase();
+
+      const filtered = allPlayers.filter(p => {
+        const matchClan =
+          selectedClan === "all" || (p.clanTag && p.clanTag === selectedClan);
+
+        const thStr = p.townHallLevel ? String(p.townHallLevel) : "";
+        const matchTH =
+          selectedTH === "all" || (thStr && thStr === selectedTH);
+
+        const haystack = [
+          p.playerName,
+          p.playerTag,
+          p.username,
+          p.userId,
+          p.clanName,
+          p.clanTag
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        const matchSearch = q === "" || haystack.includes(q);
+        return matchClan && matchTH && matchSearch;
+      });
+
+      cardsGrid.innerHTML = "";
+      if (filtered.length === 0) {
+        emptyState.style.display = "block";
+        shownCount.textContent = "0";
+      } else {
+        emptyState.style.display = "none";
+        filtered.forEach(p => {
+          cardsGrid.appendChild(buildPlayerCard(p));
+        });
+        shownCount.textContent = String(filtered.length);
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Event listeners
+    filterClan.addEventListener("change", renderList);
+    filterTH.addEventListener("change", renderList);
+    searchInput.addEventListener("input", function () {
+      renderList();
+    });
+
+    refreshBtn.addEventListener("click", function () {
+      if (!isLoading) {
+        loadData(true);
+      }
+    });
+
+    function startAutoRefresh() {
+      if (autoRefreshTimer) {
+        clearInterval(autoRefreshTimer);
+      }
+      autoRefreshTimer = setInterval(() => {
+        loadData(false);
+      }, AUTO_REFRESH_INTERVAL);
+    }
+
+    // Initial load
+    loadData(false);
+    startAutoRefresh();
+  </script>
+</body>
+</html>
